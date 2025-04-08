@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Telegraph Style Post</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lato&family=Merriweather:wght@700&family=Tiro+Devanagari+Hindi&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --font-base: 'Lato', sans-serif;
+      --font-hindi: 'Tiro Devanagari Hindi', serif;
+      --font-heading: "Mukta", sans-serif;
+      --bg-color: #ffffff;
+      --text-color: #000000;
+      --text-size: 14px;
+    }
+
+    body {
+      font-family: var(--font-base);
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      padding: 2rem 1rem;
+      margin: 0;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+    }
+
+    h1 {
+      font-family: var(--font-heading);
+      font-size: 2.2rem;
+      margin-bottom: 0;
+      font-weight: 900;
+    }
+
+    .meta {
+      font-family: var(--font-heading);
+      font-size: 0.8rem;
+      color: gray;
+      margin:0.2rem 0;
+    }
+
+  
+    .content .hindi {
+      font-family: var(--font-hindi);
+    }
+
+    .sidebar-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1001;
+      background: none;
+      border: none;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      
+    }
+
+    .sidebar {
+        display: flex;
+        flex-direction: column;
+      position: fixed;
+      top: 0;
+      right: -250px;
+      width: 250px;
+      height: 100%;
+      background: #f0f0f0;
+      padding: 56px 0;
+      box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+      transition: right 0.3s;
+      z-index: 1000;
+    }
+
+    .sidebar.open {
+      right: 0;
+    }
+
+    .sidebar label, .sidebar select, .sidebar input[type=range] {
+      display: flex;
+      margin-bottom: 1rem;
+      
+      flex-direction: column;
+      margin:8px 8px;
+    }
+
+    #loader {
+      text-align: center;
+      margin-top: 4rem;
+      font-size: 1.2rem;
+    }
+
+    @media (min-width: 768px) {
+      body {
+        padding-left: 3rem;
+        padding-right: 3rem;
+      }
+    }
+     .content p {
+
+      font-size: var(--text-size);
+  }
+    .content {
+      line-height: 1.6;
+      font-size: var(--text-size);
+  }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <svg class="logo-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <rect width="100" height="100" rx="20" ry="20" fill="#4a90e2" />
+        <text x="50" y="58" font-size="50" fill="#fff" text-anchor="middle" alignment-baseline="middle" font-family="Lato, sans-serif">A</text>
+      </svg>
+    </div>
+    <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+  </header>
+
+  <div class="sidebar" id="sidebar">
+    <label>Text Size
+      <input type="range" min="14" max="24" value="16" id="textSize">
+    </label>
+    <label>Zoom
+      <input type="range" min="80" max="150" value="100" id="zoom">
+    </label>
+    <label>Theme
+      <select id="theme">
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+        <option value="deep">Deep</option>
+      </select>
+    </label>
+  </div>
+
+  <div class="container">
+    <div id="loader">Loading post...</div>
+    <h1 id="post-title" style="display:none;"></h1>
+    <div class="meta" id="post-meta" style="display:none;"></div>
+    <div class="content" id="post-content" style="display:none;"></div>
+  </div>
+
+  <script>
+    const sidebar = document.getElementById('sidebar');
+    const textSize = document.getElementById('textSize');
+    const zoom = document.getElementById('zoom');
+    const theme = document.getElementById('theme');
+
+    function toggleSidebar() {
+      sidebar.classList.toggle('open');
+    }
+
+    textSize.addEventListener('input', () => {
+      document.documentElement.style.setProperty('--text-size', textSize.value + 'px');
+    
+    });
+
+    zoom.addEventListener('input', () => {
+      document.body.style.zoom = zoom.value + '%';
+    });
+
+    theme.addEventListener('change', () => {
+      switch(theme.value) {
+        case 'light':
+          document.documentElement.style.setProperty('--bg-color', '#ffffff');
+          document.documentElement.style.setProperty('--text-color', '#000000');
+          break;
+        case 'dark':
+          document.documentElement.style.setProperty('--bg-color', '#111111');
+          document.documentElement.style.setProperty('--text-color', '#e0e0e0');
+          break;
+        case 'deep':
+          document.documentElement.style.setProperty('--bg-color', '#1a1f2b');
+          document.documentElement.style.setProperty('--text-color', '#d4d4d4');
+          break;
+      }
+    });
+
+    function getQueryParam(name) {
+      const params = new URLSearchParams(window.location.search);
+      return params.get(name);
+    }
+
+    async function fetchPost() {
+     // const id = getQueryParam('id');
+     const id = "-ONKsz3q0e7KOjH-vkrs";
+      if (!id) {
+        document.getElementById('loader').textContent = 'Post ID missing in URL (?id=...)';
+        return;
+      }
+      const url = `https://girls-safety-36b23-default-rtdb.firebaseio.com/read/${id}.json`;
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+
+        if (!data) {
+          document.getElementById('loader').textContent = 'Post not found.';
+          return;
+        }
+
+        document.getElementById('post-title').textContent = data.title;
+        document.getElementById('post-meta').textContent = `@${data.author} • ${data.date}`;
+        document.getElementById('post-content').innerHTML = data.content;
+
+        document.getElementById('loader').style.display = 'none';
+        document.getElementById('post-title').style.display = 'block';
+        document.getElementById('post-meta').style.display = 'block';
+        document.getElementById('post-content').style.display = 'block';
+      } catch (e) {
+        console.error(e);
+        document.getElementById('loader').textContent = 'Error loading post.';
+      }
+    }
+
+    fetchPost();
+  </script>
+</body>
+</html>
