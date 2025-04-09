@@ -1,22 +1,130 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Command UI</title>
+  <style>
+    :root {
+      --bg: #f9f9f9;
+      --border: #e0e0e0;
+      --text: #111;
+      --accent: #212121; /* Sky blue */
+      --shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+      --font: 'Inter', 'Segoe UI', sans-serif;
+    }
 
-  <title>HTML</title>
-  
-  <!-- HTML -->
-  
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: var(--font);
+    }
 
-  <!-- Custom Styles -->
-  <link rel="stylesheet" href="style.css">
+    body {
+      background: var(--bg);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 1rem;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 500px;
+      background: white;
+      padding: 2rem;
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap:12px;
+}
+    .logo {
+      width: 56px;
+      height: 56px;
+    }
+
+    input[type="text"] {
+      padding: 1rem;
+      font-size: 1rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      outline: none;
+      transition: border-color 0.3s, background 0.3s;
+    }
+
+    input.command {
+      border-color: var(--accent);
+      background: #e0f6ff;
+    }
+
+    button {
+      padding: 0.75rem;
+      font-size: 1rem;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #000;
+    }
+
+    @media (min-width: 768px) {
+      body {
+        padding-left: 4rem;
+        padding-right: 4rem;
+      }
+    }
+  </style>
 </head>
-
 <body>
-  <p>Nothing to see here...</p>
-  <!-- Project -->
-  <script src="main.js"></script>
+  <div class="container">
+    <img src="logo.svg" class="logo">
+    <form onsubmit="handleSubmit(event)">
+      <input type="text" id="commandInput" placeholder="Type something..." />
+      <button type="submit">Search</button>
+    </form>
+  </div>
+
+  <script>
+    const input = document.getElementById('commandInput');
+
+    input.addEventListener('input', () => {
+      if (input.value.startsWith('/')) {
+        input.classList.add('command');
+      } else {
+        input.classList.remove('command');
+      }
+    });
+
+    function handleSubmit(event) {
+      event.preventDefault();
+      let value = input.value.trim();
+
+      if (!value) return;
+
+      if (value.startsWith('/')) {
+        value = value.slice(1); // remove the slash
+        window.location.href = "read.html?id=" + encodeURIComponent(value);
+      } else {
+        window.location.href = "search.html?q=" + encodeURIComponent(value);
+      }
+    }
+  </script>
 </body>
+
 </html>
