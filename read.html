@@ -9,14 +9,21 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;800&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --font-base: 'Lato', sans-serif;
-      --font-hindi: 'Tiro Devanagari Hindi', serif;
-      --font-heading: "Mukta", sans-serif;
-      --bg-color: #ffffff;
-      --text-color: #000000;
-      --text-size: 14px;
-    }
+
+      
+      :root {
+  --font-base: 'Lato', sans-serif;
+  --font-hindi: 'Tiro Devanagari Hindi', serif;
+  --font-heading: "Mukta", sans-serif;
+
+  --bg-color: #ffffff;
+  --text-color: #000000;
+  --text-size: 14px;
+
+  --meta-color: gray;
+  --icon-filter: invert(0);
+}
+
 
     body {
       font-family: var(--font-base);
@@ -59,13 +66,16 @@
       font-weight: 900;
     }
 
-    .meta {
-      font-family: var(--font-heading);
-      font-size: 0.8rem;
-      color: gray;
-      margin:0.2rem 0;
-    }
-
+.meta {
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+  color: var(--meta-color);
+  margin: 0.2rem 0;
+}
+.meta a {
+  color: var(--meta-color);
+  text-decoration: none;
+}
   
     .content .hindi {
       font-family: var(--font-hindi);
@@ -81,8 +91,10 @@
       font-size: 1rem;
       cursor: pointer;
       display: flex;
-      
-    }
+
+  filter: var(--icon-filter); /* update this */
+}
+
 
     .sidebar {
         display: flex;
@@ -131,15 +143,17 @@
       line-height: 1.6;
       font-size: var(--text-size);
   }
+.logo img {
+  height: 42px;
+  margin-left: 8px;
+  filter: var(--icon-filter); /* update this */
+}
   </style>
 </head>
 <body>
   <header>
     <div class="logo">
-      <svg class="logo-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-        <rect width="100" height="100" rx="20" ry="20" fill="#4a90e2" />
-        <text x="50" y="58" font-size="50" fill="#fff" text-anchor="middle" alignment-baseline="middle" font-family="Lato, sans-serif">A</text>
-      </svg>
+      <img src="logo.svg" alt="_logo.svg">
     </div>
     <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
   </header>
@@ -226,7 +240,7 @@
         }
 
         document.getElementById('post-title').textContent = data.title;
-        document.getElementById('post-meta').textContent = `@${data.author} • ${data.date}`;
+        document.getElementById('post-meta').innerHTML = `<a href="user.html?uid=${data.author}">@${data.author}</a> • ${data.date}`;
         document.getElementById('post-content').innerHTML = data.content;
 
         document.getElementById('loader').style.display = 'none';
@@ -240,6 +254,85 @@
     }
 
     fetchPost();
+    
+    
+    // Settings 
+    
+    // Utility to handle cookies
+function setCookie(name, value, days = 365) {
+  const expires = new Date(Date.now() + days * 86400000).toUTCString();
+  document.cookie = `${name}=${value}; expires=${expires}; path=/`;
+}
+
+function getCookie(name) {
+  const value = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+  return value ? value.pop() : '';
+}
+
+// Apply preferences from cookies on load
+window.addEventListener('DOMContentLoaded', () => {
+  const savedTextSize = getCookie('textSize');
+  const savedZoom = getCookie('zoom');
+  const savedTheme = getCookie('theme');
+
+  if (savedTextSize) {
+    textSize.value = savedTextSize;
+    document.documentElement.style.setProperty('--text-size', savedTextSize + 'px');
+  }
+
+  if (savedZoom) {
+    zoom.value = savedZoom;
+    document.body.style.zoom = savedZoom + '%';
+  }
+
+  if (savedTheme) {
+    theme.value = savedTheme;
+    applyTheme(savedTheme);
+  }
+});
+
+// Apply and save theme preferences
+function applyTheme(value) {
+  switch (value) {
+    case 'light':
+      document.documentElement.style.setProperty('--bg-color', '#ffffff');
+      document.documentElement.style.setProperty('--text-color', '#000000');
+      document.documentElement.style.setProperty('--meta-color', 'gray');
+      document.documentElement.style.setProperty('--icon-filter', 'invert(0)');
+      break;
+    case 'dark':
+      document.documentElement.style.setProperty('--bg-color111111');
+      document.documentElement.style.setProperty('--text-color', '#e0e0e0');
+      document.documentElement.style.setProperty('--meta-color', '#bbbbbb');
+      document.documentElement.style.setProperty('--icon-filter', 'invert(1)');
+      break;
+    case 'deep':
+      document.documentElement.style.setProperty('--bg-color', '#1a1f2b');
+      document.documentElement.style.setProperty('--text-color', '#d4d4d4');
+      document.documentElement.style.setProperty('--meta-color', '#999999');
+      document.documentElement.style.setProperty('--icon-filter', 'invert(1)');
+      break;
+  }
+  setCookie('theme', value);
+}
+
+
+// Save to cookies when changed
+textSize.addEventListener('input', () => {
+  document.documentElement.style.setProperty('--text-size', textSize.value + 'px');
+  setCookie('textSize', textSize.value);
+});
+
+zoom.addEventListener('input', () => {
+  document.body.style.zoom = zoom.value + '%';
+  setCookie('zoom', zoom.value);
+});
+
+theme.addEventListener('change', () => {
+  applyTheme(theme.value);
+});
+
+
   </script>
 </body>
 </html>
